@@ -1,0 +1,38 @@
+ aria-label={`عرض ${title}`}
+loading="lazy"<small>بواسطة {image.user?.name || "Unsplash"}</small>
+
+srcSet={`${image.urls.small} 400w, ${image.urls.regular} 1080w`}
+card-actions
+rel="noreferrer"
+ href={image.links.download_location || image.links.download}
+button,
+input {
+  font: inherit;
+}
+ padding: 28px max(6vw, 28px) 64px;
+
+background:
+    linear-gradient(110deg, rgba(16, 30, 36, 0.9), rgba(16, 30, 36, 0.37)),
+    url("https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=2000&q=85")
+      center/cover;
+letter-spacing: 0.13em;
+clamp(2.5rem, 6vw, 4.7rem);
+p:last-child
+flex: 1;
+outline: 0;
+
+width: min(1400px, 100%);
+
+padding: 45px max(4vw, 24px) 70px;
+padding-inline: 18px
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+button.active
+
+
+
+
+
