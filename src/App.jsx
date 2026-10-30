@@ -23,7 +23,6 @@ function App() {
   const [showFavorites, setShowFavorites] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const closeButtonRef = useRef(null);
-  //iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
   useEffect(() => {
     localStorage.setItem("gallery-favorites", JSON.stringify(favorites));
   }, [favorites]);
@@ -37,15 +36,34 @@ function App() {
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [selectedImage]);
   const fetchImages = useCallback(async (search = "") => {
-    if (!API_KEY) {
-      setError("أضف VITE_UNSPLASH_ACCESS_KEY إلى ملف .env لتشغيل المعرض.");
-      setLoading(false);
-      return;
-    }
     setLoading(true);
     setError("");
     setShowFavorites(false);
     try {
+      if (!API_KEY) {
+        // وضع العرض التجريبي: صور مجانية من Picsum بدون مفتاح API
+        const page = Math.floor(Math.random() * 10) + 1;
+        const { data } = await axios.get("https://picsum.photos/v2/list", {
+          params: { page, limit: 60 },
+        });
+        const term = search.toLowerCase();
+        const list = data
+          .filter((p) => !term || p.author.toLowerCase().includes(term))
+          .slice(0, 24)
+          .map((p) => ({
+            id: `picsum-${p.id}`,
+            alt_description: `صورة بواسطة ${p.author}`,
+            user: { name: p.author },
+            urls: {
+              small: `https://picsum.photos/id/${p.id}/400/300`,
+              regular: `https://picsum.photos/id/${p.id}/1080/720`,
+            },
+            links: { download: p.download_url },
+          }));
+        setImages(list);
+        setQuery(search);
+        return;
+      }
       const endpoint = search ? "/search/photos" : "/photos/random";
       const params = search ? { query: search, per_page: 24 } : { count: 24 };
       const { data } = await axios.get(`${API_URL}${endpoint}`, {
